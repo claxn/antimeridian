@@ -252,3 +252,11 @@ def test_great_circle(
     output = read_output("great-circle", subdirectory)
     fixed = antimeridian.fix_polygon(input, great_circle=great_circle)
     assert fixed.normalize() == output.normalize()
+
+
+def test_crossing_am_flat() -> None:
+    # https://github.com/gadomski/antimeridian/issues/187
+    poly_crossing_am = Polygon([(177, 67), (179, 65), (198, 66), (198, 68)])
+    multipoly_fixed = antimeridian.fix_polygon(poly_crossing_am, great_circle=False)
+
+    assert poly_crossing_am.area == round(multipoly_fixed.area, 5)
